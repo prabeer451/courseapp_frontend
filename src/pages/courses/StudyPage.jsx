@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { jsPDF } from "jspdf";
+import { getToken } from 'utils/auth';
 
 const StudyPage = () => {
   const { courseId } = useParams();
@@ -21,42 +22,35 @@ const StudyPage = () => {
   const [selectedTopic, setSelectedTopic] = useState(null);
 
   useEffect(() => {
-    // Fetch course details and topics (dummy data for now)
-    setCourse({
-      id: courseId,
-      title: `Course ${courseId}`,
-      description: `This is a comprehensive course covering various aspects of ${courseId}. It includes multiple topics with video lectures and detailed transcripts.`
-    });
-    setTopics([
-      {
-        id: 1,
-        title: 'Introduction to React',
-        videoUrl: 'https://www.youtube.com/embed/Tn6-PIqc4UM',
-        details: 'React is a popular JavaScript library for building user interfaces. This introductory topic covers the basics of React, its core concepts, and why it\'s widely used in modern web development.',
-        transcript: 'Welcome to the Introduction to React. In this video, we\'ll cover the fundamental concepts of React, including components, JSX, and the virtual DOM. We\'ll also discuss why React has become so popular among developers and how it can help you build efficient, scalable user interfaces.'
-      },
-      {
-        id: 2,
-        title: 'React Components',
-        videoUrl: 'https://www.youtube.com/embed/Cla1WwguArA',
-        details: 'Components are the building blocks of React applications. This topic delves into the different types of components, their lifecycle, and best practices for creating reusable UI elements.',
-        transcript: 'In this lesson on React Components, we\'ll explore how to create both functional and class components. We\'ll discuss the component lifecycle, state management, and how to pass data between components using props. By the end of this video, you\'ll have a solid understanding of how to structure your React applications using components.'
-      },
-      {
-        id: 3,
-        title: 'Introduction to React',
-        videoUrl: 'https://www.youtube.com/embed/Tn6-PIqc4UM',
-        details: 'React is a popular JavaScript library for building user interfaces. This introductory topic covers the basics of React, its core concepts, and why it\'s widely used in modern web development.',
-        transcript: 'Welcome to the Introduction to React. In this video, we\'ll cover the fundamental concepts of React, including components, JSX, and the virtual DOM. We\'ll also discuss why React has become so popular among developers and how it can help you build efficient, scalable user interfaces.'
-      },
-      {
-        id: 4,
-        title: 'React Components',
-        videoUrl: 'https://www.youtube.com/embed/Cla1WwguArA',
-        details: 'Components are the building blocks of React applications. This topic delves into the different types of components, their lifecycle, and best practices for creating reusable UI elements.',
-        transcript: 'In this lesson on React Components, we\'ll explore how to create both functional and class components. We\'ll discuss the component lifecycle, state management, and how to pass data between components using props. By the end of this video, you\'ll have a solid understanding of how to structure your React applications using components.'
-      },
-    ]);
+    const fetchCourseData = async () => {
+      try {
+        const token = getToken();
+        const response = await fetch(`http://127.0.0.1:8000/api/courses/${courseId}/`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch course data');
+        }
+  
+        const data = await response.json();
+        setCourse({
+          id: data.id,
+          title: data.title,
+          description: data.details,
+        });
+        setTopics(data.topics);
+      } catch (error) {
+        console.error('Error fetching course data:', error);
+        // Handle error (e.g., show error message to user)
+      }
+    };
+  
+    fetchCourseData();
   }, [courseId]);
 
   const handleTopicSelect = (topic) => {

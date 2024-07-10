@@ -83,7 +83,7 @@ export default function AuthLogin({ isDemo = false }) {
             });
 
             setStatus({ success: true });
-            navigate('/dashboard'); // Redirect to dashboard or any other protected route
+            navigate('/dashboard/default'); // Redirect to dashboard or any other protected route
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
