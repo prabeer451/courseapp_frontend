@@ -12,10 +12,11 @@ import {
   Grid,
   Stepper,
   Step,
-  StepLabel
+  StepLabel,
+  CircularProgress
 } from '@mui/material';
 import MainCard from 'components/MainCard';
-
+import { getToken } from 'utils/auth';
 const TestPage = () => {
   const { courseId } = useParams();
   const navigate = useNavigate();
@@ -24,104 +25,170 @@ const TestPage = () => {
   const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(true);
+  const token = getToken();
   useEffect(() => {
-    // Fetch course details and questions (dummy data for now)
-    setCourse({
-      id: courseId,
-      title: `Course ${courseId}`,
-      description: `Description for Course ${courseId}`
-    });
-    setQuestions([
-      {
-        id: 1,
-        text: 'What is React?',
-        options: ['A JavaScript library', 'A database', 'An operating system', 'A programming language'],
-        correctAnswer: 'A JavaScript library'
-      },
-      {
-        id: 2,
-        text: 'Which of the following is used in React.js to increase performance?',
-        options: ['Virtual DOM', 'Original DOM', 'Both A and B', 'None of the above'],
-        correctAnswer: 'Virtual DOM'
-      },
-      // Add more questions as needed
-    ]);
-  }, [courseId]);
+    const fetchCourseAndQuestions = async () => {
+      setIsLoading(true);
+      try {
 
-  const handleAnswerChange = (questionId, answer) => {
-    setAnswers(prev => ({ ...prev, [questionId]: answer }));
-  };
+        // Fetch course details
+        const courseResponse = await fetch(`http://127.0.0.1:8000/api/courses/${courseId}/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!courseResponse.ok) throw new Error('Failed to fetch course details');
+        const courseData = await courseResponse.json();
+        setCourse(courseData);
 
-  const handleSubmit = () => {
-    let correctAnswers = 0;
-    questions.forEach(question => {
-      if (answers[question.id] === question.correctAnswer) {
-        correctAnswers++;
+        // Fetch questions
+        const questionsResponse = await fetch(`http://127.0.0.1:8000/api/courses/${courseId}/questions/`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (!questionsResponse.ok) throw new Error('Failed to fetch questions');
+        const questionsData = await questionsResponse.json();
+        setQuestions(questionsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsLoading(false);
       }
-    });
-    setScore((correctAnswers / questions.length) * 100);
-    setActiveStep(1); // Move to results page
+    };
+
+    fetchCourseAndQuestions();
+  }, [courseId, token]);
+
+  const handleSubmitAnswer = async (questionId, selectedChoice) => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/submissions/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          question: questionId,
+          selected_choice: selectedChoice
+        })
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit answer');
+      }
+  
+      const result = await response.json();
+      setAnswers(prevAnswers => ({
+        ...prevAnswers,
+        [questionId]: { ...result, selected_choice: selectedChoice }
+      }));
+      console.log('Answer submitted successfully:', result);
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  };
+  
+
+  const handleAnswerSelect = (questionId, selectedChoice) => {
+    setAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [questionId]: { selected_choice: selectedChoice }
+    }));
+    handleSubmitAnswer(questionId, selectedChoice);
   };
 
-  const renderTestQuestions = () => (
-    <Box>
-      {questions.map(question => (
-        <Paper key={question.id} sx={{ p: 2, mb: 2 }}>
-          <Typography variant="h6" gutterBottom>{question.text}</Typography>
-          <FormControl component="fieldset">
-            <RadioGroup
-              value={answers[question.id] || ''}
-              onChange={(e) => handleAnswerChange(question.id, e.target.value)}
-            >
-              {question.options.map(option => (
-                <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </Paper>
-      ))}
-      <Button variant="contained" color="primary" onClick={handleSubmit}>Submit Test</Button>
-    </Box>
-  );
+  const handleNext = () => {
+    if (activeStep < questions.length - 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else {
+      handleFinish();
+    }
+  };
 
-  const renderTestResults = () => (
-    <Box>
-      <Typography variant="h4" gutterBottom>Test Results</Typography>
-      <Typography variant="h5" gutterBottom>Your score: {score.toFixed(2)}%</Typography>
-      <Typography variant="body1" gutterBottom>
-        You answered {Math.round(score / 100 * questions.length)} out of {questions.length} questions correctly.
-      </Typography>
-      <Box mt={3}>
-        <Typography variant="h6" gutterBottom>Question Review:</Typography>
-        {questions.map(question => (
-          <Paper key={question.id} sx={{ p: 2, mb: 2 }}>
-            <Typography variant="subtitle1" gutterBottom>{question.text}</Typography>
-            <Typography color={answers[question.id] === question.correctAnswer ? 'success.main' : 'error.main'}>
-              Your answer: {answers[question.id] || 'Not answered'}
-            </Typography>
-            <Typography color="success.main">
-              Correct answer: {question.correctAnswer}
-            </Typography>
-          </Paper>
-        ))}
-      </Box>
-      <Button variant="contained" color="primary" onClick={() => navigate('/dashboard')}>
-        Return to Dashboard
-      </Button>
-    </Box>
-  );
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
 
-  if (!course) return <Typography>Loading...</Typography>;
+  const handleFinish = () => {
+    const totalQuestions = questions.length;
+    const correctAnswers = Object.values(answers).filter(answer => answer.is_correct).length;
+    const calculatedScore = (correctAnswers / totalQuestions) * 100;
+    setScore(calculatedScore.toFixed(2)); // Round to 2 decimal places
+    setActiveStep(questions.length); // Move to the completion step
+  };
+
+  if (isLoading) {
+    return (
+      <MainCard title="Loading...">
+        <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+          <CircularProgress />
+        </Box>
+      </MainCard>
+    );
+  }
 
   return (
-    <MainCard title={`Test for ${course.title}`}>
-      <Typography variant="body1" gutterBottom>{course.description}</Typography>
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-        <Step><StepLabel>Take Test</StepLabel></Step>
-        <Step><StepLabel>View Results</StepLabel></Step>
-      </Stepper>
-      {activeStep === 0 ? renderTestQuestions() : renderTestResults()}
+    <MainCard title={course ? course.title : 'Test'}>
+      {course && (
+        <Box>
+          <Typography variant="body1" gutterBottom>
+            {course.description}
+          </Typography>
+
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {questions.map((_, index) => (
+              <Step key={index}>
+                <StepLabel>Question {index + 1}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+
+          {activeStep < questions.length ? (
+            <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                {questions[activeStep].question_text}
+              </Typography>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  value={answers[questions[activeStep].id]?.selected_choice?.toString() || ''}
+                  onChange={(e) => handleAnswerSelect(questions[activeStep].id, e.target.value)}
+                >
+                  {questions[activeStep].options.map((option, index) => (
+                    <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
+                  ))}
+                </RadioGroup>
+              </FormControl>
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <Button onClick={handleBack} disabled={activeStep === 0}>
+                  Back
+                </Button>
+                <Button variant="contained" color="primary" onClick={activeStep === questions.length - 1 ? handleFinish : handleNext}>
+                  {activeStep === questions.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+              </Box>
+            </Paper>
+          ) : (
+            <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Test Completed!
+              </Typography>
+              <Typography variant="body1">
+                Your final score: {score}%
+              </Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}>
+                Correct answers: {Object.values(answers).filter(answer => answer.is_correct).length} out of {questions.length}
+              </Typography>
+              <Button variant="contained" color="primary" onClick={() => navigate(`/dashboard/default`)} sx={{ mt: 2 }}>
+                Back to Course
+              </Button>
+            </Paper>
+          )}
+        </Box>
+      )}
     </MainCard>
   );
 };

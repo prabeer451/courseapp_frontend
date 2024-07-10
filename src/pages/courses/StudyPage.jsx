@@ -41,7 +41,7 @@ const StudyPage = () => {
         setCourse({
           id: data.id,
           title: data.title,
-          description: data.details,
+          description: data.description,
         });
         setTopics(data.topics);
       } catch (error) {

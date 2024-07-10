@@ -73,7 +73,7 @@ export default function DashboardDefault() {
                 <Grid item xs={12} sm={6} md={3} key={product.id}>
                   <MainCard>
                     <img
-                      src={product.imageUrl}
+                      src={product.image_link}
                       alt={product.title}
                       style={{ width: '100%', height: 200, objectFit: 'cover' }}
                     />
