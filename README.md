@@ -1,8 +1,5 @@
 
-# Mantis Free React Admin Template
-
-## Description
-Mantis is a free React admin dashboard template. It provides a modern and responsive interface for building admin panels, dashboards, and other web applications.
+# LMS Demo
 
 ## Prerequisites
 - Node.js (version compatible with the project)
