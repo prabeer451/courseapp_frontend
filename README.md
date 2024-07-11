@@ -1,5 +1,8 @@
 
 # LMS Demo
+## Screenshot
+![image](https://github.com/prabeer451/courseapp_frontend/assets/34795763/f4a6e21a-1b01-4fbc-b803-2a9029116900)
+
 
 ## Prerequisites
 - Node.js (version compatible with the project)
@@ -10,13 +13,13 @@
 1. Clone the repository: https://github.com/prabeer451/courseapp_frontend.git
 
 2. Install dependencies:
-
+```bash
 yarn install
-
+```
 3. To start the development server:
-
+```bash
 yarn start
-
+```
 This command builds the app for production to the `build` folder.
 
 ## Additional Scripts
@@ -65,5 +68,9 @@ This command runs the app in development mode. Open [http://localhost:3000](http
 ## Building for Production
 
 To create a production build:
-
+```bash
 yarn build
+```
+
+## Link for demo video of frontend react application
+https://drive.google.com/file/d/1Ctmzbt9eJoBvroGfv-XYNktMtEzC-2wm/view?usp=sharing
