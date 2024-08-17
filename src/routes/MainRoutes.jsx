@@ -17,14 +17,20 @@ const Login = Loadable(lazy(() => import('pages/authentication/login')));
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
 // Protected route component
+// const ProtectedRoute = ({ children }) => {
+//   const token = localStorage.getItem('token');
+//   if (!token) {
+//     return <Navigate to="/login" replace />;
+//   }
+//   return children;
+// };
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   if (!token) {
-    return <Navigate to="/login" replace />;
+    // return <Navigate to="/login" replace />;
   }
   return children;
 };
-
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
