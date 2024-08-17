@@ -1,6 +1,15 @@
 
 # LMS Demo
 
+
+## Demo Video for Front End
+
+https://drive.google.com/file/d/1Ctmzbt9eJoBvroGfv-XYNktMtEzC-2wm/view?usp=sharing
+
+## Code Link for Backend 
+
+https://github.com/varungidwani91/tutor_app/tree/main
+
 ## Prerequisites
 - Node.js (version compatible with the project)
 - Yarn package manager
@@ -10,13 +19,13 @@
 1. Clone the repository: https://github.com/prabeer451/courseapp_frontend.git
 
 2. Install dependencies:
-
+```bash
 yarn install
-
+```
 3. To start the development server:
-
+```bash
 yarn start
-
+```
 This command builds the app for production to the `build` folder.
 
 ## Additional Scripts
