@@ -5,6 +5,7 @@ import Dashboard from 'layout/Dashboard'
 import ProtectedRoute from 'routes/components/ProtectedRoute'
 
 const CustomerList = Loadable(lazy(() => import('pages/customers/listCustomers')))
+const CustomerProducts = Loadable(lazy(() => import('pages/customers/customerProducts/listCustomerProducts')))
 
 const CustomerRoutes = {
   path: '/',
@@ -13,6 +14,10 @@ const CustomerRoutes = {
     {
       path: 'customers',
       element: <ProtectedRoute><CustomerList /></ProtectedRoute>
+    },
+    {
+      path: 'customers/:customerId/products',
+      element: <ProtectedRoute><CustomerProducts /></ProtectedRoute>
     }
   ]
 }

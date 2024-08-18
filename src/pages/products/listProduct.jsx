@@ -28,7 +28,7 @@ import EditProduct from 'src/pages/products/productCategory/editProductCategory'
 import CreateProductType from 'src/pages/products/productType/createProductType';
 import CreateProductCategory from 'src/pages/products/productCategory/createProductCategory';
 import ProductAmcMapping from 'src/pages/products/productAmcMapping';
-import WarrantyMapping from 'src/pages/products/WarrantyMapping'; // Import WarrantyMapping
+import WarrantyMapping from 'src/pages/products/productWarrantyMapping'; // Import WarrantyMapping
 
 const ListProduct = () => {
   const navigate = useNavigate();
@@ -211,7 +211,7 @@ const ListProduct = () => {
                 variant="body2"
                 onClick={handleOpenAmcMenu}
               >
-                AMC Management
+                AMC/ARC/Warranty Management
               </Link>
               <Menu
                 anchorEl={anchorElAmc}
@@ -219,21 +219,6 @@ const ListProduct = () => {
                 onClose={handleCloseAmcMenu}
               >
                 <MenuItem onClick={handleOpenAmcMapping}>Map AMC with Product</MenuItem>
-              </Menu>
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={handleOpenWarrantyMenu}
-              >
-                Warranty Management
-              </Link>
-              <Menu
-                anchorEl={anchorElWarranty}
-                open={Boolean(anchorElWarranty)}
-                onClose={handleCloseWarrantyMenu}
-              >
                 <MenuItem onClick={handleOpenWarrantyMapping}>Map Warranty with Product</MenuItem>
               </Menu>
             </Grid>
