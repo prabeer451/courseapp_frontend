@@ -27,6 +27,8 @@ import CreateProduct from './createProduct';
 import EditProduct from 'src/pages/products/productCategory/editProductCategory';
 import CreateProductType from 'src/pages/products/productType/createProductType';
 import CreateProductCategory from 'src/pages/products/productCategory/createProductCategory';
+import ProductAmcMapping from 'src/pages/products/productAmcMapping';
+import WarrantyMapping from 'src/pages/products/WarrantyMapping'; // Import WarrantyMapping
 
 const ListProduct = () => {
   const navigate = useNavigate();
@@ -40,8 +42,12 @@ const ListProduct = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
   const [openCreateType, setOpenCreateType] = useState(false);
+  const [openAmcMapping, setOpenAmcMapping] = useState(false);
+  const [openWarrantyMapping, setOpenWarrantyMapping] = useState(false); // Add state for Warranty Mapping
   const token = getToken();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElAmc, setAnchorElAmc] = useState(null);
+  const [anchorElWarranty, setAnchorElWarranty] = useState(null); // Add state for Warranty menu
 
   useEffect(() => {
     fetchProducts();
@@ -121,6 +127,24 @@ const ListProduct = () => {
     setOpenCreateType(false);
   };
 
+  const handleOpenAmcMapping = () => {
+    setOpenAmcMapping(true);
+    handleCloseAmcMenu();
+  };
+
+  const handleCloseAmcMapping = () => {
+    setOpenAmcMapping(false);
+  };
+
+  const handleOpenWarrantyMapping = () => {
+    setOpenWarrantyMapping(true);
+    handleCloseWarrantyMenu();
+  };
+
+  const handleCloseWarrantyMapping = () => {
+    setOpenWarrantyMapping(false);
+  };
+
   const handleViewProfile = (productId) => {
     navigate(`/products/${productId}`);
   };
@@ -131,6 +155,22 @@ const ListProduct = () => {
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+
+  const handleOpenAmcMenu = (event) => {
+    setAnchorElAmc(event.currentTarget);
+  };
+
+  const handleCloseAmcMenu = () => {
+    setAnchorElAmc(null);
+  };
+
+  const handleOpenWarrantyMenu = (event) => {
+    setAnchorElWarranty(event.currentTarget);
+  };
+
+  const handleCloseWarrantyMenu = () => {
+    setAnchorElWarranty(null);
   };
 
   if (isLoading) {
@@ -163,6 +203,38 @@ const ListProduct = () => {
               >
                 <MenuItem onClick={handleOpenCreateCategory}>Create Product Category</MenuItem>
                 <MenuItem onClick={handleOpenCreateType}>Create Product Type</MenuItem>
+              </Menu>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={handleOpenAmcMenu}
+              >
+                AMC Management
+              </Link>
+              <Menu
+                anchorEl={anchorElAmc}
+                open={Boolean(anchorElAmc)}
+                onClose={handleCloseAmcMenu}
+              >
+                <MenuItem onClick={handleOpenAmcMapping}>Map AMC with Product</MenuItem>
+              </Menu>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={handleOpenWarrantyMenu}
+              >
+                Warranty Management
+              </Link>
+              <Menu
+                anchorEl={anchorElWarranty}
+                open={Boolean(anchorElWarranty)}
+                onClose={handleCloseWarrantyMenu}
+              >
+                <MenuItem onClick={handleOpenWarrantyMapping}>Map Warranty with Product</MenuItem>
               </Menu>
             </Grid>
           </Grid>
@@ -231,6 +303,8 @@ const ListProduct = () => {
         console.log('New Product Type:', newType);
         handleCloseCreateType();
       }} />
+      <ProductAmcMapping open={openAmcMapping} onClose={handleCloseAmcMapping} />
+      <WarrantyMapping open={openWarrantyMapping} onClose={handleCloseWarrantyMapping} />
     </MainCard>
   );
 };

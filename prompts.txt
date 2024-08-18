@@ -12,3 +12,10 @@ create a list of AMC Plas in datatable format with serach and paging functionali
 in this the frequency will be mapped to the service and how many times the service will be provided at which interval of time from following data 
 
 create AMC Route similar to and linking followin
+
+
+TASK
+-----
+product to be mapped with multiple AMC and 1 warranty
+
+customer to mapped with Product and Corresponding AMC and Warranty
