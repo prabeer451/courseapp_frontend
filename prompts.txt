@@ -1,0 +1,3 @@
+create dialogue page to create parts with following fields S_NO(Primary Code) PART_CODE  ITEM_DESCRIPTION take referece from 
+
+create dialogue page to edit parts  take details from  take referece from 

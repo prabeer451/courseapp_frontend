@@ -6,12 +6,14 @@ import Loadable from 'components/Loadable';
 import Dashboard from 'layout/Dashboard';
 import TestPage from 'pages/courses/TestPage';
 import StudyPage from 'pages/courses/StudyPage';
+import ProductRoutes from 'src/routes/ProductRoutes.jsx';
 
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
 const Shadow = Loadable(lazy(() => import('pages/component-overview/shadows')));
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/index')));
 const Login = Loadable(lazy(() => import('pages/authentication/login')));
+const ListProduct = Loadable(lazy(() => import('pages/products/listProduct')));
 
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
@@ -73,7 +75,12 @@ const MainRoutes = {
     {
       path: 'course/:courseId/study',
       element: <ProtectedRoute><StudyPage /></ProtectedRoute>
-    }
+    },
+    {
+      path: 'products',
+      element: <ProtectedRoute><ListProduct /></ProtectedRoute>
+    },
+    ...ProductRoutes.children
   ]
 };
 
