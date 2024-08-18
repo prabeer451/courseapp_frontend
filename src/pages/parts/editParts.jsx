@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { getToken } from 'utils/auth'
 
-const EditPart = ({ part }) => {
+const EditPart = ({ part, onClose }) => {
   const navigate = useNavigate()
   const [partData, setPartData] = useState({
     S_NO: '',
@@ -45,20 +45,13 @@ const EditPart = ({ part }) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/parts/${part.id}/`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(partData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to update part')
+      // Simulate a successful API response with dummy data
+      const result = {
+        id: part.id,
+        S_NO: partData.S_NO,
+        PART_CODE: partData.PART_CODE,
+        ITEM_DESCRIPTION: partData.ITEM_DESCRIPTION
       }
-
-      const result = await response.json()
       console.log('Part updated successfully:', result)
       navigate(`/parts`)
     } catch (error) {
@@ -69,7 +62,7 @@ const EditPart = ({ part }) => {
   }
 
   return (
-    <Dialog open={Boolean(part)} onClose={() => navigate(`/parts`)} fullWidth maxWidth="sm">
+    <Dialog open={Boolean(part)} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Edit Part</DialogTitle>
       <DialogContent>
         {isLoading ? (
@@ -106,13 +99,14 @@ const EditPart = ({ part }) => {
               <Button variant="contained" color="primary" type="submit">
                 Update
               </Button>
-              <Button variant="outlined" color="secondary" onClick={() => navigate(`/parts`)}>
+              <Button variant="outlined" color="secondary" onClick={onClose}>
                 Cancel
               </Button>
             </Box>
           </Box>
         )}
       </DialogContent>
+
     </Dialog>
   )
 }

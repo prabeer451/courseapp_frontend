@@ -18,12 +18,14 @@ import {
 import MainCard from 'components/MainCard'
 import { getToken } from 'utils/auth'
 import EditPart from './editParts'
+import CreatePart from './createParts'
 
 const ListParts = () => {
   const navigate = useNavigate()
   const [parts, setParts] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
+  const [openCreate, setOpenCreate] = useState(false)
   const [selectedPart, setSelectedPart] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [page, setPage] = useState(0)
@@ -82,6 +84,14 @@ const ListParts = () => {
     setSelectedPart(null)
   }
 
+  const handleOpenCreate = () => {
+    setOpenCreate(true)
+  }
+
+  const handleCloseCreate = () => {
+    setOpenCreate(false)
+  }
+
   if (isLoading) {
     return (
       <MainCard title="Loading...">
@@ -101,6 +111,9 @@ const ListParts = () => {
           onChange={handleSearchChange}
           variant="outlined"
         />
+        <Button variant="contained" color="primary" onClick={handleOpenCreate}>
+          Add Part
+        </Button>
       </Box>
       <TableContainer component={Paper}>
         <Table>
@@ -137,6 +150,7 @@ const ListParts = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
       <EditPart part={selectedPart} open={openEdit} onClose={handleCloseEdit} />
+      <CreatePart open={openCreate} onClose={handleCloseCreate} />
     </MainCard>
   )
 }

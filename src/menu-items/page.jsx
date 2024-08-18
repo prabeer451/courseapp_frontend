@@ -1,34 +1,57 @@
 // assets
-import { LoginOutlined, ProfileOutlined } from '@ant-design/icons';
+import { LoginOutlined, ProfileOutlined, ToolOutlined, ShoppingOutlined, CustomerServiceOutlined, UserOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
   LoginOutlined,
-  ProfileOutlined
+  ProfileOutlined,
+  ToolOutlined,
+  ShoppingOutlined,
+  CustomerServiceOutlined,
+  UserOutlined
 };
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
 
 const pages = {
-  id: 'authentication',
-  title: 'Authentication',
+  id: 'pages',
+  title: 'Pages',
   type: 'group',
   children: [
     {
-      id: 'login1',
-      title: 'Login',
+      id: 'parts',
+      title: 'Parts',
       type: 'item',
-      url: '/login',
-      icon: icons.LoginOutlined,
-      target: true
+      url: '/parts',
+      icon: icons.ToolOutlined
     },
     {
-      id: 'register1',
-      title: 'Register',
+      id: 'products',
+      title: 'Products',
       type: 'item',
-      url: '/register',
-      icon: icons.ProfileOutlined,
-      target: true
+      url: '/products',
+      icon: icons.ShoppingOutlined
+    },
+    {
+      id: 'services',
+      title: 'Services',
+      type: 'item',
+      url: '/services',
+      icon: icons.CustomerServiceOutlined
+    },
+    {
+      id: 'customers',
+      title: 'Customers',
+      type: 'item',
+      url: '/customers',
+      icon: icons.UserOutlined
+    },
+    {
+      id: 'amc',
+      title: 'AMC',
+      type: 'item',
+      url: '/amc',
+      icon: icons.ProfileOutlined
     }
   ]
 };

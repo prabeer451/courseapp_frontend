@@ -7,6 +7,11 @@ import Dashboard from 'layout/Dashboard';
 import TestPage from 'pages/courses/TestPage';
 import StudyPage from 'pages/courses/StudyPage';
 import ProductRoutes from 'src/routes/ProductRoutes.jsx';
+import PartsRoutes from 'src/routes/PartsRoutes.jsx';
+import ProtectedRoute from 'routes/components/ProtectedRoute.jsx';
+import CustomerRoutes from 'src/routes/CustomerRoutes.jsx';
+import ServiceRoutes from 'src/routes/ServiceRoutes.jsx';
+import AMCRoutes from 'src/routes/AMCRoutes.jsx';
 
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
@@ -18,21 +23,6 @@ const ListProduct = Loadable(lazy(() => import('pages/products/listProduct')));
 // render - sample page
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/sample-page')));
 
-// Protected route component
-// const ProtectedRoute = ({ children }) => {
-//   const token = localStorage.getItem('token');
-//   if (!token) {
-//     return <Navigate to="/login" replace />;
-//   }
-//   return children;
-// };
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    // return <Navigate to="/login" replace />;
-  }
-  return children;
-};
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -80,7 +70,11 @@ const MainRoutes = {
       path: 'products',
       element: <ProtectedRoute><ListProduct /></ProtectedRoute>
     },
-    ...ProductRoutes.children
+    ...ProductRoutes.children,
+    ...PartsRoutes.children,
+    ...CustomerRoutes.children,
+    ...ServiceRoutes.children,
+    ...AMCRoutes.children
   ]
 };
 

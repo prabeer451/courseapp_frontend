@@ -14,7 +14,12 @@ import {
   TableHead,
   TableRow,
   TablePagination,
-  Link
+  Link,
+  Card,
+  CardContent,
+  Grid,
+  Menu,
+  MenuItem
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { getToken } from 'utils/auth';
@@ -36,6 +41,7 @@ const ListProduct = () => {
   const [openCreateCategory, setOpenCreateCategory] = useState(false);
   const [openCreateType, setOpenCreateType] = useState(false);
   const token = getToken();
+  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -99,6 +105,7 @@ const ListProduct = () => {
 
   const handleOpenCreateCategory = () => {
     setOpenCreateCategory(true);
+    handleCloseMenu();
   };
 
   const handleCloseCreateCategory = () => {
@@ -107,6 +114,7 @@ const ListProduct = () => {
 
   const handleOpenCreateType = () => {
     setOpenCreateType(true);
+    handleCloseMenu();
   };
 
   const handleCloseCreateType = () => {
@@ -115,6 +123,14 @@ const ListProduct = () => {
 
   const handleViewProfile = (productId) => {
     navigate(`/products/${productId}`);
+  };
+
+  const handleOpenMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
   if (isLoading) {
@@ -129,6 +145,29 @@ const ListProduct = () => {
 
   return (
     <MainCard title="Product List">
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={3}>
+              <Link
+                component="button"
+                variant="body2"
+                onClick={handleOpenMenu}
+              >
+                Product Management
+              </Link>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleCloseMenu}
+              >
+                <MenuItem onClick={handleOpenCreateCategory}>Create Product Category</MenuItem>
+                <MenuItem onClick={handleOpenCreateType}>Create Product Type</MenuItem>
+              </Menu>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <TextField
           label="Search"
@@ -138,12 +177,6 @@ const ListProduct = () => {
         />
         <Button variant="contained" color="primary" onClick={handleOpenCreate}>
           Create Product
-        </Button>
-        <Button variant="contained" color="secondary" onClick={handleOpenCreateCategory}>
-          Create Product Category
-        </Button>
-        <Button variant="contained" color="secondary" onClick={handleOpenCreateType}>
-          Create Product Type
         </Button>
       </Box>
       <TableContainer component={Paper}>

@@ -12,19 +12,19 @@ import {
 } from '@mui/material'
 import { getToken } from 'utils/auth'
 
-const CreateService = ({ open, onClose }) => {
+const CreateServiceFrequency = ({ open, onClose }) => {
   const navigate = useNavigate()
-  const [serviceData, setServiceData] = useState({
-    SERVICE_NAME: '',
-    TERMS_OF_SERVICE: '',
-    CHARGES: ''
+  const [serviceFrequencyData, setServiceFrequencyData] = useState({
+    FREQUENCY_ID: '',
+    DESCRIPTION: '',
+    INTERVAL_MONTHS: '',
   })
   const [isLoading, setIsLoading] = useState(false)
   const token = getToken()
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setServiceData(prevData => ({
+    setServiceFrequencyData(prevData => ({
       ...prevData,
       [name]: value
     }))
@@ -35,17 +35,17 @@ const CreateService = ({ open, onClose }) => {
     setIsLoading(true)
     try {
       // Commented out API call
-      // const response = await fetch('http://127.0.0.1:8000/api/services/', {
+      // const response = await fetch('http://127.0.0.1:8000/api/service-frequencies/', {
       //   method: 'POST',
       //   headers: {
       //     'Authorization': `Bearer ${token}`,
       //     'Content-Type': 'application/json'
       //   },
-      //   body: JSON.stringify(serviceData)
+      //   body: JSON.stringify(serviceFrequencyData)
       // })
 
       // if (!response.ok) {
-      //   throw new Error('Failed to create service')
+      //   throw new Error('Failed to create service frequency')
       // }
 
       // const result = await response.json()
@@ -53,14 +53,14 @@ const CreateService = ({ open, onClose }) => {
       // Dummy data
       const result = {
         id: Math.floor(Math.random() * 1000),
-        ...serviceData
+        ...serviceFrequencyData
       }
 
-      console.log('Service created successfully:', result)
-      navigate(`/services`)
+      console.log('Service frequency created successfully:', result)
+      navigate(`/services/frequency`)
       onClose()
     } catch (error) {
-      console.error('Error creating service:', error)
+      console.error('Error creating service frequency:', error)
     } finally {
       setIsLoading(false)
     }
@@ -68,7 +68,7 @@ const CreateService = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Create Service</DialogTitle>
+      <DialogTitle>Create Service Frequency</DialogTitle>
       <DialogContent>
         {isLoading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="200px">
@@ -77,28 +77,29 @@ const CreateService = ({ open, onClose }) => {
         ) : (
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
-              label="SERVICE_NAME"
-              name="SERVICE_NAME"
-              value={serviceData.SERVICE_NAME}
+              label="FREQUENCY_ID"
+              name="FREQUENCY_ID"
+              value={serviceFrequencyData.FREQUENCY_ID}
               onChange={handleChange}
               fullWidth
               margin="normal"
             />
             <TextField
-              label="TERMS_OF_SERVICE"
-              name="TERMS_OF_SERVICE"
-              value={serviceData.TERMS_OF_SERVICE}
+              label="DESCRIPTION"
+              name="DESCRIPTION"
+              value={serviceFrequencyData.DESCRIPTION}
               onChange={handleChange}
               fullWidth
               margin="normal"
             />
             <TextField
-              label="CHARGES"
-              name="CHARGES"
-              value={serviceData.CHARGES}
+              label="INTERVAL_MONTHS"
+              name="INTERVAL_MONTHS"
+              value={serviceFrequencyData.INTERVAL_MONTHS}
               onChange={handleChange}
               fullWidth
               margin="normal"
+              type="number"
             />
             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
               <Button variant="contained" color="primary" type="submit">
@@ -115,4 +116,4 @@ const CreateService = ({ open, onClose }) => {
   )
 }
 
-export default CreateService
+export default CreateServiceFrequency

@@ -17,10 +17,21 @@ import {
   CardContent,
   CardMedia,
   Grid,
-  IconButton
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  TextField
 } from '@mui/material'
 import MainCard from 'components/MainCard'
 import { getToken } from 'utils/auth'
+import EditIcon from '@mui/icons-material/Edit'
+import WarrantyDetails from './profileComponents.jsx/warrantyDetails'
 
 const ProductProfile = ({ productId }) => {
   const navigate = useNavigate()
@@ -28,11 +39,43 @@ const ProductProfile = ({ productId }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [productData, setProductData] = useState({
+    Product_SNO: '',
+    SAGECODE: '',
+    PRODUCTNAME: '',
+    CATEGORY: '',
+    ProductType: ''
+  })
+  const [categories, setCategories] = useState([])
+  const [productTypes, setProductTypes] = useState([])
   const token = getToken()
 
   useEffect(() => {
     fetchProduct()
   }, [productId])
+
+  useEffect(() => {
+    const fetchCategoriesAndTypes = async () => {
+      try {
+        const categoriesData = [
+          { id: 1, name: 'Category 1' },
+          { id: 2, name: 'Category 2' }
+        ]
+        const typesData = [
+          { id: 1, name: 'Type 1' },
+          { id: 2, name: 'Type 2' }
+        ]
+
+        setCategories(categoriesData)
+        setProductTypes(typesData)
+      } catch (error) {
+        console.error('Error fetching categories or product types:', error)
+      }
+    }
+
+    fetchCategoriesAndTypes()
+  }, [])
 
   const fetchProduct = async () => {
     setIsLoading(true)
@@ -63,6 +106,13 @@ const ProductProfile = ({ productId }) => {
       }
 
       setProduct(dummyData)
+      setProductData({
+        Product_SNO: dummyData.Product_SNO,
+        SAGECODE: dummyData.SAGECODE,
+        PRODUCTNAME: dummyData.PRODUCTNAME,
+        CATEGORY: dummyData.CATEGORY,
+        ProductType: dummyData.ProductType
+      })
     } catch (error) {
       console.error('Error fetching product:', error)
     } finally {
@@ -77,6 +127,51 @@ const ProductProfile = ({ productId }) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
+  }
+
+  const handleEditClick = () => {
+    setIsEditDialogOpen(true)
+  }
+
+  const handleEditDialogClose = () => {
+    setIsEditDialogOpen(false)
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setProductData(prevData => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/products/${product.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update product')
+      }
+
+      const result = await response.json()
+      console.log('Product updated successfully:', result)
+      setProduct(result)
+      setIsEditDialogOpen(false)
+    } catch (error) {
+      console.error('Error updating product:', error)
+      // Handle error (e.g., show an error message to the user)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (isLoading) {
@@ -98,16 +193,48 @@ const ProductProfile = ({ productId }) => {
   }
 
   return (
-    <MainCard title="Product Profile">
-      <Box display="flex" flexDirection="column" alignItems="center" mb={2} border={1} borderColor="grey.400" p={2}>
-        <Typography variant="h3">{product.PRODUCTNAME}</Typography>
-        <Typography variant="h5">{product.CATEGORY}</Typography>
-        <Typography variant="h5">{product.ProductType}</Typography>
-        <Typography variant="body1">{product.description}</Typography>
-        <Typography variant="body1">Pricing: {product.pricing}</Typography>
-        <Button onClick={() => navigate(`/edit-product/${product.id}`)}>
-          Edit
-        </Button>
+    <MainCard title={<Typography variant="h1">Product Profile</Typography>}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        mb={4}
+        sx={{
+          backgroundColor: 'background.paper',
+          borderRadius: 2,
+          boxShadow: 3,
+          overflow: 'hidden',
+          transition: 'all 0.3s ease-in-out',
+          '&:hover': {
+            boxShadow: 6,
+            transform: 'translateY(-5px)'
+          }
+        }}
+      >
+        <Box
+          sx={{
+            width: '100%',
+            height: 10,
+            backgroundImage: `url(${product.imageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+        <Box p={3} width="100%">
+          <Typography variant="h4" gutterBottom>{product.PRODUCTNAME}</Typography>
+          <Typography variant="subtitle1" color="text.secondary" gutterBottom>{product.CATEGORY} | {product.ProductType}</Typography>
+          <Typography variant="body2" paragraph>{product.description}</Typography>
+          <Typography variant="h6" gutterBottom>Pricing: ${product.pricing}</Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEditClick}
+            startIcon={<EditIcon />}
+            fullWidth
+          >
+            Edit Product
+          </Button>
+        </Box>
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
@@ -187,16 +314,7 @@ const ProductProfile = ({ productId }) => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h2">Warranty</Typography>
-              {product.warranty.map((w, index) => (
-                <Box key={index} mb={1}>
-                  <Typography>{w.plan}: {w.policy}</Typography>
-                </Box>
-              ))}
-            </CardContent>
-          </Card>
+          <WarrantyDetails warranty={product.warranty} />
         </Grid>
         <Grid item xs={12} md={6}>
           <Card>
@@ -211,8 +329,82 @@ const ProductProfile = ({ productId }) => {
           </Card>
         </Grid>
       </Grid>
+      <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose} fullWidth maxWidth="sm">
+        <DialogTitle>Edit Product</DialogTitle>
+        <DialogContent>
+          {isLoading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box component="form" onSubmit={handleSubmit}>
+              <TextField
+                label="Product SNO"
+                name="Product_SNO"
+                value={productData.Product_SNO}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="SAGECODE"
+                name="SAGECODE"
+                value={productData.SAGECODE}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Product Name"
+                name="PRODUCTNAME"
+                value={productData.PRODUCTNAME}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Category</InputLabel>
+                <Select
+                  name="CATEGORY"
+                  value={productData.CATEGORY}
+                  onChange={handleChange}
+                >
+                  {categories.map(category => (
+                    <MenuItem key={category.id} value={category.name}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Product Type</InputLabel>
+                <Select
+                  name="ProductType"
+                  value={productData.ProductType}
+                  onChange={handleChange}
+                >
+                  {productTypes.map(type => (
+                    <MenuItem key={type.id} value={type.name}>
+                      {type.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant="contained" color="primary" type="submit">
+                  Update
+                </Button>
+                <Button variant="outlined" color="secondary" onClick={handleEditDialogClose}>
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </MainCard>
   )
 }
 
 export default ProductProfile
+

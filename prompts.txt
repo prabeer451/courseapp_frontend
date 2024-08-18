@@ -1,3 +1,14 @@
-create dialogue page to create parts with following fields S_NO(Primary Code) PART_CODE  ITEM_DESCRIPTION take referece from 
+create dialogue page to create servicefrequency with following fields FREQUENCY_ID (Primary Key)
+DESCRIPTION (e.g., "1st Service", "2nd Service")
+INTERVAL_MONTHS
+ take code reference from 
 
 create dialogue page to edit parts  take details from  take referece from 
+
+comment the current api and replace with dummy data
+
+create a list of AMC Plas in datatable format with serach and paging functionality to view more details about the AMC there must be an accordian like functionality to expand more details about the AMC like Services and parts attached etc 
+
+in this the frequency will be mapped to the service and how many times the service will be provided at which interval of time from following data 
+
+create AMC Route similar to and linking followin
