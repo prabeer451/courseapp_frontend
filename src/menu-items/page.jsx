@@ -1,5 +1,5 @@
 // assets
-import { LoginOutlined, ProfileOutlined, ToolOutlined, ShoppingOutlined, CustomerServiceOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginOutlined, ProfileOutlined, ToolOutlined, ShoppingOutlined, CustomerServiceOutlined, UserOutlined, FileTextOutlined } from '@ant-design/icons';
 
 // icons
 const icons = {
@@ -8,7 +8,8 @@ const icons = {
   ToolOutlined,
   ShoppingOutlined,
   CustomerServiceOutlined,
-  UserOutlined
+  UserOutlined,
+  FileTextOutlined
 };
 
 // ==============================|| MENU ITEMS - EXTRA PAGES ||============================== //
@@ -52,6 +53,13 @@ const pages = {
       type: 'item',
       url: '/amc',
       icon: icons.ProfileOutlined
+    },
+    {
+      id: 'complaints',
+      title: 'Complaints',
+      type: 'item',
+      url: '/complaints',
+      icon: icons.FileTextOutlined
     }
   ]
 };

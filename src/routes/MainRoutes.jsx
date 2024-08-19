@@ -12,6 +12,7 @@ import ProtectedRoute from 'routes/components/ProtectedRoute.jsx';
 import CustomerRoutes from 'src/routes/CustomerRoutes.jsx';
 import ServiceRoutes from 'src/routes/ServiceRoutes.jsx';
 import AMCRoutes from 'src/routes/AMCRoutes.jsx';
+import ComplaintsRoutes from 'src/routes/ComplaintsRoutes.jsx';
 
 const Color = Loadable(lazy(() => import('pages/component-overview/color')));
 const Typography = Loadable(lazy(() => import('pages/component-overview/typography')));
@@ -74,7 +75,8 @@ const MainRoutes = {
     ...PartsRoutes.children,
     ...CustomerRoutes.children,
     ...ServiceRoutes.children,
-    ...AMCRoutes.children
+    ...AMCRoutes.children,
+    ...ComplaintsRoutes.children
   ]
 };
 
