@@ -18,7 +18,10 @@ const CreatePart = ({ open, onClose }) => {
   const [partData, setPartData] = useState({
     S_NO: '',
     PART_CODE: '',
-    ITEM_DESCRIPTION: ''
+    ITEM_DESCRIPTION: '',
+    WARRANTY_PERIOD: '',
+    MRP: '',
+    DP: ''
   })
   const [isLoading, setIsLoading] = useState(false)
   const token = getToken()
@@ -93,6 +96,30 @@ const CreatePart = ({ open, onClose }) => {
               fullWidth
               margin="normal"
             />
+            <TextField
+              label="WARRANTY_PERIOD"
+              name="WARRANTY_PERIOD"
+              value={partData.WARRANTY_PERIOD}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="MRP"
+              name="MRP"
+              value={partData.MRP}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="DP"
+              name="DP"
+              value={partData.DP}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
             <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
               <Button variant="contained" color="primary" type="submit">
                 Create
@@ -109,4 +136,3 @@ const CreatePart = ({ open, onClose }) => {
 }
 
 export default CreatePart
-

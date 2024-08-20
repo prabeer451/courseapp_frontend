@@ -41,9 +41,9 @@ const ListServices = () => {
     try {
       const dummyData = {
         results: [
-          { id: 1, SERVICE_NAME: 'Service 1', TERMS_OF_SERVICE: 'Terms 1', CHARGES: '100' },
-          { id: 2, SERVICE_NAME: 'Service 2', TERMS_OF_SERVICE: 'Terms 2', CHARGES: '200' },
-          { id: 3, SERVICE_NAME: 'Service 3', TERMS_OF_SERVICE: 'Terms 3', CHARGES: '300' }
+          { id: 1, SERVICE_NAME: 'Service 1', TERMS_OF_SERVICE: 'Terms 1', LOCAL_CHARGES: '50', OUTSTATION_CHARGES: '100', LOCAL_SLA: '24h', OUTSTATION_SLA: '48h' },
+          { id: 2, SERVICE_NAME: 'Service 2', TERMS_OF_SERVICE: 'Terms 2', LOCAL_CHARGES: '100', OUTSTATION_CHARGES: '200', LOCAL_SLA: '24h', OUTSTATION_SLA: '48h' },
+          { id: 3, SERVICE_NAME: 'Service 3', TERMS_OF_SERVICE: 'Terms 3', LOCAL_CHARGES: '150', OUTSTATION_CHARGES: '300', LOCAL_SLA: '24h', OUTSTATION_SLA: '48h' }
         ]
       }
 
@@ -121,7 +121,10 @@ const ListServices = () => {
             <TableRow>
               <TableCell>SERVICE_NAME</TableCell>
               <TableCell>TERMS_OF_SERVICE</TableCell>
-              <TableCell>CHARGES</TableCell>
+              <TableCell>LOCAL_CHARGES</TableCell>
+              <TableCell>OUTSTATION_CHARGES</TableCell>
+              <TableCell>LOCAL_SLA</TableCell>
+              <TableCell>OUTSTATION_SLA</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -130,7 +133,10 @@ const ListServices = () => {
               <TableRow key={service.id}>
                 <TableCell>{service.SERVICE_NAME}</TableCell>
                 <TableCell>{service.TERMS_OF_SERVICE}</TableCell>
-                <TableCell>{service.CHARGES}</TableCell>
+                <TableCell>{service.LOCAL_CHARGES}</TableCell>
+                <TableCell>{service.OUTSTATION_CHARGES}</TableCell>
+                <TableCell>{service.LOCAL_SLA}</TableCell>
+                <TableCell>{service.OUTSTATION_SLA}</TableCell>
                 <TableCell>
                   <Button variant="outlined" color="primary" onClick={() => handleOpenEdit(service)}>
                     Edit

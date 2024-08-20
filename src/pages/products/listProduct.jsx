@@ -240,8 +240,8 @@ const ListProduct = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Product SNO</TableCell>
-              <TableCell>SAGECODE</TableCell>
+              <TableCell>SNO</TableCell>
+              <TableCell>SKU Code</TableCell>
               <TableCell>Product Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Product Type</TableCell>

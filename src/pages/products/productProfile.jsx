@@ -26,12 +26,15 @@ import {
   Select,
   InputLabel,
   FormControl,
-  TextField
+  TextField,
+  Tabs,
+  Tab
 } from '@mui/material'
 import MainCard from 'components/MainCard'
 import { getToken } from 'utils/auth'
 import EditIcon from '@mui/icons-material/Edit'
 import WarrantyDetails from './profileComponents.jsx/warrantyDetails'
+import ServiceDetails from './profileComponents.jsx/ServiceDetails'
 
 const ProductProfile = ({ productId }) => {
   const navigate = useNavigate()
@@ -49,6 +52,7 @@ const ProductProfile = ({ productId }) => {
   })
   const [categories, setCategories] = useState([])
   const [productTypes, setProductTypes] = useState([])
+  const [tabIndex, setTabIndex] = useState(0)
   const token = getToken()
 
   useEffect(() => {
@@ -102,7 +106,9 @@ const ProductProfile = ({ productId }) => {
         amc: [
           { plan: 'AMC Plan 1', policy: '1 year' },
           { plan: 'AMC Plan 2', policy: '2 years' }
-        ]
+        ],
+        serviceCost: '200',
+        serviceDetails: 'Service details here'
       }
 
       setProduct(dummyData)
@@ -174,6 +180,10 @@ const ProductProfile = ({ productId }) => {
     }
   }
 
+  const handleTabChange = (event, newValue) => {
+    setTabIndex(newValue)
+  }
+
   if (isLoading) {
     return (
       <MainCard title="Loading...">
@@ -236,99 +246,132 @@ const ProductProfile = ({ productId }) => {
           </Button>
         </Box>
       </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h2">Images</Typography>
-              <Grid container spacing={2}>
-                {product.images.map((image, index) => (
-                  <Grid item key={index} xs={6}>
-                    <CardMedia component="img" image={image} alt={`Product Image ${index + 1}`} />
-                  </Grid>
+      <Tabs value={tabIndex} onChange={handleTabChange} aria-label="product details tabs">
+        <Tab label="Images" />
+        <Tab label="Parts" />
+        <Tab label="Customers" />
+        <Tab label="Warranty" />
+        <Tab label="Service Details" />
+        <Tab label="AMC" />
+      </Tabs>
+      {tabIndex === 0 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h2">Images</Typography>
+                <Grid container spacing={2}>
+                  {product.images.map((image, index) => (
+                    <Grid item key={index} xs={6}>
+                      <CardMedia component="img" image={image} alt={`Product Image ${index + 1}`} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
+      {tabIndex === 1 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h2">Parts</Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Part Name</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {product.parts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((part, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{part}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  component="div"
+                  count={product.parts.length}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
+      {tabIndex === 2 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h2">Customers</Typography>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Customer Name</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {product.customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customer, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{customer}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  component="div"
+                  count={product.customers.length}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  rowsPerPage={rowsPerPage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      )}
+      {tabIndex === 3 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <WarrantyDetails warranty={product.warranty} />
+          </Grid>
+        </Grid>
+      )}
+      {tabIndex === 4 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <ServiceDetails product={product} />
+          </Grid>
+        </Grid>
+      )}
+      {tabIndex === 5 && (
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Card>
+              <CardContent>
+                <Typography variant="h2">AMC</Typography>
+                {product.amc.map((a, index) => (
+                  <Box key={index} mb={1}>
+                    <Typography>{a.plan}: {a.policy}</Typography>
+                  </Box>
                 ))}
-              </Grid>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h2">Parts</Typography>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Part Name</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {product.parts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((part, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{part}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                component="div"
-                count={product.parts.length}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h2">Customers</Typography>
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Customer Name</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {product.customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((customer, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{customer}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                component="div"
-                count={product.customers.length}
-                page={page}
-                onPageChange={handleChangePage}
-                rowsPerPage={rowsPerPage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <WarrantyDetails warranty={product.warranty} />
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h2">AMC</Typography>
-              {product.amc.map((a, index) => (
-                <Box key={index} mb={1}>
-                  <Typography>{a.plan}: {a.policy}</Typography>
-                </Box>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+      )}
       <Dialog open={isEditDialogOpen} onClose={handleEditDialogClose} fullWidth maxWidth="sm">
         <DialogTitle>Edit Product</DialogTitle>
         <DialogContent>
@@ -407,4 +450,3 @@ const ProductProfile = ({ productId }) => {
 }
 
 export default ProductProfile
-

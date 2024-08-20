@@ -41,9 +41,9 @@ const ListParts = () => {
     try {
       const dummyData = {
         results: [
-          { id: 1, S_NO: '001', PART_CODE: 'PC001', ITEM_DESCRIPTION: 'Part 1 Description' },
-          { id: 2, S_NO: '002', PART_CODE: 'PC002', ITEM_DESCRIPTION: 'Part 2 Description' },
-          { id: 3, S_NO: '003', PART_CODE: 'PC003', ITEM_DESCRIPTION: 'Part 3 Description' }
+          { id: 1, S_NO: '001', PART_CODE: 'PC001', ITEM_DESCRIPTION: 'Part 1 Description', WARRANTY_PERIOD: '1 Month', DP: '100', MRP: '150' },
+          { id: 2, S_NO: '002', PART_CODE: 'PC002', ITEM_DESCRIPTION: 'Part 2 Description', WARRANTY_PERIOD: '2 Months', DP: '200', MRP: '250' },
+          { id: 3, S_NO: '003', PART_CODE: 'PC003', ITEM_DESCRIPTION: 'Part 3 Description', WARRANTY_PERIOD: '3 Months', DP: '300', MRP: '350' }
         ]
       }
 
@@ -120,8 +120,11 @@ const ListParts = () => {
           <TableHead>
             <TableRow>
               <TableCell>S_NO</TableCell>
-              <TableCell>PART_CODE</TableCell>
+              <TableCell>PART SKU</TableCell>
               <TableCell>ITEM_DESCRIPTION</TableCell>
+              <TableCell>WARRANTY_PERIOD</TableCell>
+              <TableCell>DP</TableCell>
+              <TableCell>MRP</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -131,6 +134,9 @@ const ListParts = () => {
                 <TableCell>{part.S_NO}</TableCell>
                 <TableCell>{part.PART_CODE}</TableCell>
                 <TableCell>{part.ITEM_DESCRIPTION}</TableCell>
+                <TableCell>{part.WARRANTY_PERIOD}</TableCell>
+                <TableCell>{part.DP}</TableCell>
+                <TableCell>{part.MRP}</TableCell>
                 <TableCell>
                   <Button variant="outlined" color="primary" onClick={() => handleOpenEdit(part)}>
                     Edit
@@ -156,4 +162,3 @@ const ListParts = () => {
 }
 
 export default ListParts
-

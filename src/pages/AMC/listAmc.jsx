@@ -50,10 +50,10 @@ const ListAMC = () => {
   };
 
   return (
-    <MainCard title={<h1>AMC Plans</h1>}>
+    <MainCard title={<h1>Service Contracts</h1>}>
       <Box mb={2} display="flex" justifyContent="flex-end">
         <Button variant="contained" color="primary" onClick={() => setDialogOpen(true)}>
-          Create AMC Plan
+          Create Service Contract
         </Button>
       </Box>
       <TableContainer component={Paper}>
@@ -61,7 +61,7 @@ const ListAMC = () => {
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>AMC Name</TableCell>
+              <TableCell>Service Contract Name</TableCell>
               <TableCell>Charges</TableCell>
               <TableCell>Duration</TableCell>
             </TableRow>
@@ -88,7 +88,7 @@ const ListAMC = () => {
                     <Collapse in={expandedAmcId === amc.id} timeout="auto" unmountOnExit>
                       <Box margin={1}>
                         <Typography variant="h6" gutterBottom component="div">
-                          AMC Details
+                          Service Contract Details
                         </Typography>
                         <Table size="small" aria-label="purchases">
                           <TableHead>

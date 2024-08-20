@@ -49,7 +49,7 @@ const pages = {
     },
     {
       id: 'amc',
-      title: 'AMC',
+      title: 'Service Contracts',
       type: 'item',
       url: '/amc',
       icon: icons.ProfileOutlined

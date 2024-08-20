@@ -108,7 +108,7 @@ const ProductAmcMapping = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Map AMC with Product</DialogTitle>
+      <DialogTitle>Map Service Contract with Product</DialogTitle>
       <DialogContent>
         {isLoading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="200px">
@@ -120,7 +120,7 @@ const ProductAmcMapping = ({ open, onClose }) => {
               <Autocomplete
                 options={productOptions}
                 getOptionLabel={(option) => option.sno}
-                renderInput={(params) => <TextField {...params} label="Product SNO" />}
+                renderInput={(params) => <TextField {...params} label="SKU Number" />}
                 onChange={handleProductChange}
               />
             </FormControl>
@@ -129,7 +129,7 @@ const ProductAmcMapping = ({ open, onClose }) => {
                 multiple
                 options={amcOptions}
                 getOptionLabel={(option) => option.code}
-                renderInput={(params) => <TextField {...params} label="AMC Codes" />}
+                renderInput={(params) => <TextField {...params} label="Contract Service Code" />}
                 onChange={handleAmcChange}
               />
             </FormControl>
